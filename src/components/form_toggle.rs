@@ -9,23 +9,17 @@ pub struct FormToggleProps {
 }
 
 pub enum FormToggleActions {
-    Toggle,
-    Set(bool),
+    SetValue(bool),
 }
 
+#[derive(Default)]
 pub struct FormToggle {}
-
-impl FormToggle {
-    pub fn new() -> Self {
-        Self {}
-    }
-}
 
 impl Component for FormToggle {
     type Props = FormToggleProps;
     type Actions = FormToggleActions;
 
-    fn render(&mut self, props: Self::Props, frame: &mut Frame, area: Rect) {
+    fn render(&mut self, props: &Self::Props, frame: &mut Frame, area: Rect) {
         let mut content = "".to_string();
         if props.focused {
             content += "> ";
@@ -40,11 +34,11 @@ impl Component for FormToggle {
         frame.render_widget(Span::from(content), area);
     }
 
-    fn handle_key(&mut self, _props: Self::Props, code: KeyCode) -> Option<FormToggleActions> {
+    fn handle_key(&mut self, props: &Self::Props, code: KeyCode) -> Option<Self::Actions> {
         match code {
-            KeyCode::Tab => Some(FormToggleActions::Toggle),
-            KeyCode::Right => Some(FormToggleActions::Set(true)),
-            KeyCode::Left => Some(FormToggleActions::Set(false)),
+            KeyCode::Tab => Some(FormToggleActions::SetValue(!props.value)),
+            KeyCode::Right => Some(FormToggleActions::SetValue(true)),
+            KeyCode::Left => Some(FormToggleActions::SetValue(false)),
             _ => None,
         }
     }

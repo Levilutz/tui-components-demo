@@ -18,7 +18,7 @@ pub struct App {
 impl App {
     pub fn new() -> Self {
         Self {
-            form: form::Form::new(3),
+            form: form::Form::default(),
         }
     }
 }
@@ -27,14 +27,14 @@ impl Component for App {
     type Props = AppProps;
     type Actions = AppActions;
 
-    fn render(&mut self, _props: Self::Props, frame: &mut Frame, area: Rect) {
-        self.form.render(form::FormProps {}, frame, area);
+    fn render(&mut self, _props: &Self::Props, frame: &mut Frame, area: Rect) {
+        self.form.render(&form::FormProps {}, frame, area);
     }
 
-    fn handle_key(&mut self, _props: Self::Props, code: KeyCode) -> Option<AppActions> {
-        if let Some(action) = self.form.handle_key(form::FormProps {}, code) {
+    fn handle_key(&mut self, _props: &Self::Props, code: KeyCode) -> Option<Self::Actions> {
+        if let Some(action) = self.form.handle_key(&form::FormProps {}, code) {
             match action {
-                form::FormActions::Submit { values: _ } => todo!(),
+                form::FormActions::Submit { formatted: _ } => todo!(),
                 _ => {}
             }
             Some(AppActions::NoBubble)

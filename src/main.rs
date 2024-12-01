@@ -19,6 +19,7 @@ async fn main() -> Result {
 }
 
 async fn run_app(mut terminal: DefaultTerminal, framerate: f64) -> Result {
+    let app_props = app::AppProps {};
     let mut app_component = app::App::new();
 
     let mut reader = EventStream::new();
@@ -29,12 +30,12 @@ async fn run_app(mut terminal: DefaultTerminal, framerate: f64) -> Result {
         // Wait for next tick or key event
         tokio::select! {
             _ = tick_interval.tick() => {
-                terminal.draw(|frame| app_component.render(app::AppProps{}, frame, frame.area()))?;
+                terminal.draw(|frame| app_component.render(&app_props, frame, frame.area()))?;
             }
 
             event = reader.next().fuse() => match event {
                 Some(Ok(Event::Key(key_event))) => {
-                    if let Some(app::AppActions::Quit) = app_component.handle_key(app::AppProps{}, key_event.code) {
+                    if let Some(app::AppActions::Quit) = app_component.handle_key(&app_props, key_event.code) {
                         return Ok(())
                     }
                 }
