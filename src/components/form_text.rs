@@ -20,7 +20,14 @@ impl Component for FormText {
     type Actions = FormTextActions;
 
     fn render(&mut self, props: &Self::Props, frame: &mut Frame, area: Rect) {
-        frame.render_widget(Span::from(format!("[ {} ]", props.content)), area);
+        let mut content = "".to_string();
+        if props.focused {
+            content += "> ";
+        } else {
+            content += "  ";
+        }
+        content += &props.content;
+        frame.render_widget(Span::from(content), area);
     }
 
     fn handle_key(&mut self, props: &Self::Props, code: KeyCode) -> Option<Self::Actions> {
